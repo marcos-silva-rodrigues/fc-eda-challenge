@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -51,5 +52,9 @@ public class BalanceService {
                     newAccount.setUpdatedAt(LocalDateTime.now());
                     return newAccount;
                 });
+    }
+
+    public Optional<Balance> getBalanceById(String id) {
+        return balanceRepository.findById(id);
     }
 }

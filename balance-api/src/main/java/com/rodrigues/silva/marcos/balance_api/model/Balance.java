@@ -1,5 +1,8 @@
 package com.rodrigues.silva.marcos.balance_api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -9,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "balances")
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Balance {
 
     @Id
@@ -39,7 +43,7 @@ public class Balance {
         this.balance = balance;
     }
 
-    public LocalDateTime getUpdatedAte() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
