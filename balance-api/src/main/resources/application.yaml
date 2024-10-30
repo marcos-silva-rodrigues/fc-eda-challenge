@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: balance-api
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_HOSTS}
+      group-id: ${KAFKA_GROUP_ID}
+
+server:
+  port: 8000
+
+

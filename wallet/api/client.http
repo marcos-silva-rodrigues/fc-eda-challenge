@@ -11,7 +11,7 @@ POST http://localhost:8080/accounts HTTP/1.1
 Content-Type: application/json
 
 {
-    "client_id": "18c376b4-d566-4dab-a7b1-d4d782f8137b"
+    "client_id": "25f47afc-ab35-4148-b63c-864f2c981787"
 }
 
 ###
@@ -20,6 +20,6 @@ Content-Type: application/json
 
 {
     "account_id_from": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
-    "account_id_to": "5f088b3a-bbfb-4eed-8321-38625b11e925",
+    "account_id_to": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
     "amount": 100.0
 }

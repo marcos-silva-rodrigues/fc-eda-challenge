@@ -1,19 +1,36 @@
 services:
   wallet_app:
-    build: ./wallet-core
+    build: ./wallet
     ports:
       - "8080:8080"
+    networks:
+      - wallet
+      - integration
+
   wallet_db:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wallet
       MYSQL_PASSWORD: root
-    ports:
-      - 3306:3306
     volumes:
-      - ./wallet-core/.docker/data:/var/lib/mysql
-      - ./wallet-core/.docker/mysql:/docker-entrypoint-initdb.d
+      - ./wallet/.docker/data:/var/lib/mysql
+      - ./wallet/.docker/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - wallet
+
+  balance_db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: balance
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./balance-api/.docker/data:/var/lib/mysql
+    networks:
+      - balance
 
   zookeeper:
     image: "confluentinc/cp-zookeeper:6.1.0"
@@ -24,6 +41,8 @@ services:
       TZ: Sao_Paulo/Brazil
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - kafka
 
   kafka:
     image: "confluentinc/cp-enterprise-kafka:6.1.0"
@@ -48,6 +67,9 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
       CONFLUENT_METRICS_ENABLE: 'false'
+    networks:
+      - kafka
+      - integration
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:7.3.0
@@ -64,3 +86,11 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
+    networks:
+      - kafka
+
+networks:
+  wallet:
+  balance:
+  kafka:
+  integration:
