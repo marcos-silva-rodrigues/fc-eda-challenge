@@ -19,6 +19,21 @@ services:
     networks:
       - wallet
 
+  balance_app:
+    build:
+      context: balance-api
+    ports:
+      - "3000:8000"
+    environment:
+      DB_PASSWORD: root
+      DB_URL: jdbc:mysql://balance_db:3306/balance
+      DB_USER: root
+      KAFKA_GROUP_ID: wallet
+      KAFKA_HOSTS: kafka:29092
+    networks:
+      - balance
+      - integration
+
   balance_db:
     image: mysql:5.7
     environment:
