@@ -6,6 +6,11 @@ services:
     networks:
       - wallet
       - integration
+    depends_on:
+      wallet_db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
 
   wallet_db:
     image: mysql:5.7
@@ -18,12 +23,17 @@ services:
       - ./wallet/.docker/mysql:/docker-entrypoint-initdb.d
     networks:
       - wallet
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
 
   balance_app:
     build:
       context: balance-api
     ports:
-      - "3000:8000"
+      - "3003:8000"
     environment:
       DB_PASSWORD: root
       DB_URL: jdbc:mysql://balance_db:3306/balance
@@ -33,6 +43,11 @@ services:
     networks:
       - balance
       - integration
+    depends_on:
+      kafka:
+        condition: service_started
+      balance_db:
+        condition: service_healthy
 
   balance_db:
     image: mysql:5.7
@@ -40,12 +55,15 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: balance
       MYSQL_PASSWORD: root
-    ports:
-      - "3306:3306"
     volumes:
       - ./balance-api/.docker/data:/var/lib/mysql
     networks:
       - balance
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
 
   zookeeper:
     image: "confluentinc/cp-zookeeper:6.1.0"
